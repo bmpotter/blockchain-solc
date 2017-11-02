@@ -1,0 +1,22 @@
+
+ARG VERSION
+
+RUN apt-get update && apt-get -y install git build-essential cmake libboost-all-dev
+
+COPY *.patch /tmp/
+
+WORKDIR /tmp
+RUN git clone --recursive https://github.com/ethereum/solidity.git
+WORKDIR solidity
+RUN git checkout v$VERSION
+RUN uname -m | grep aarch64 && patch -p0 </tmp/aarch64_hack.patch || true
+RUN test -s /tmp/v$VERSION.patch && patch -p0 </tmp/v$VERSION.patch || true
+RUN mkdir build
+WORKDIR build
+RUN cmake -DCMAKE_BUILD_TYPE=Release -DTESTS=1 -DSTATIC_LINKING=1 ..
+RUN make -j2 solc soltest
+RUN install -s solc/solc /usr/local/bin
+RUN install -s test/soltest /usr/local/bin
+
+# ref: https://github.com/rainbeam/solidity-static/blob/master/Dockerfile
+

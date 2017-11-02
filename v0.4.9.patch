@@ -1,0 +1,19 @@
+*** test/RPCSession.cpp.ORIG	Fri Feb 24 03:49:07 2017
+--- test/RPCSession.cpp	Fri Feb 24 03:49:23 2017
+***************
+*** 114,120 ****
+  #else
+  	send(m_socket, _req.c_str(), _req.length(), 0);
+  
+! 	char c;
+  	string response;
+  	while ((c = fgetc(m_fp)) != EOF)
+  	{
+--- 114,120 ----
+  #else
+  	send(m_socket, _req.c_str(), _req.length(), 0);
+  
+! 	signed char c;
+  	string response;
+  	while ((c = fgetc(m_fp)) != EOF)
+  	{

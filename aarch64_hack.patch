@@ -1,0 +1,23 @@
+*** libdevcore/debugbreak.h.ORIG	Fri Feb 24 02:26:23 2017
+--- libdevcore/debugbreak.h	Fri Feb 24 02:27:10 2017
+***************
+*** 93,98 ****
+--- 93,110 ----
+  	/* Has same known problem and workaround
+  	 * as Thumb mode */
+  }
++ #elif defined(__aarch64__) 
++ enum { HAVE_TRAP_INSTRUCTION = 1, };
++ __attribute__((gnu_inline, always_inline))
++ static void __inline__ trap_instruction(void)
++ {
++ 	/* See 'aarch64-linux-tdep.c' in GDB source,
++ 	 * 'eabi_linux_arm_le_breakpoint' */
++ 	//__asm__ volatile(".inst 0xe7f001f0");
++ 	__builtin_trap();
++ 	/* Has same known problem and workaround
++ 	 * as Thumb mode */
++ }
+  #elif defined(ETH_EMSCRIPTEN)
+  enum { HAVE_TRAP_INSTRUCTION = 1, };
+  __attribute__((gnu_inline, always_inline))
